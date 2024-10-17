@@ -10,7 +10,10 @@
     <h1>진용화의 블로그입니다</h1>
     <a href="/write/article" class="btn btn-primary">글쓰기</a>
     <div class="card mb-4" th:each="article : *{articles}">
-      <div class="card-header" th:text="${article.title}"></div>
+        <a th:href="@{/article/{id}(id=${article.id}) }">
+            <div class="card-header" th:text="${article.title}"></div>
+        </a>
+
       <div class="card-body">
         <div class="card-text" th:text="${article.content}"></div>
       </div>

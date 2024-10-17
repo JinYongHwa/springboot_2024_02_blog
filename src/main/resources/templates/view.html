@@ -9,6 +9,35 @@
   <div class="container">
     <h1 th:text="${article.title}"></h1>
     <p th:text="${article.content}"></p>
+
+      <input id="value" type="hidden" th:value="${article.id}" >
+      <div class="text-center">
+          <button id="delete-btn" class="btn btn-danger" >삭제</button>
+      </div>
+
+
   </div>
+    <script>
+        var valueElement=document.getElementById("value")
+        var deleteBtn=document.getElementById("delete-btn")
+
+        deleteBtn.addEventListener("click",event=>{
+            var id=valueElement.value
+            fetch("/api/article/"+id,{
+                method:"DELETE"
+            })
+            .then(response=>{
+                return response.json()
+            })
+            .then(json=>{
+                if(json.success){
+                    location.href="/"
+                }
+                else{
+                    alert(json.message)
+                }
+            })
+        })
+    </script>
 </body>
 </html>

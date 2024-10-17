@@ -2,6 +2,7 @@ package kr.ac.mjc.blog.controller;
 
 import kr.ac.mjc.blog.domain.Article;
 import kr.ac.mjc.blog.dto.ArticleRequest;
+import kr.ac.mjc.blog.dto.ArticleResponse;
 import kr.ac.mjc.blog.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,10 +35,10 @@ public class BlogViewController {
     }
     @PostMapping("/article/write")
     public ModelAndView articleWrite(@ModelAttribute ArticleRequest articleRequest){
-        Article article=articleService.writeArticle(articleRequest);
+        ArticleResponse response=articleService.writeArticle(articleRequest);
         ModelAndView mav=new ModelAndView();
-        mav.addObject("article",article);
-        mav.setViewName("redirect:/article/"+article.getId());
+        mav.addObject("article",response.getArticle());
+        mav.setViewName("redirect:/article/"+response.getArticle().getId());
         return mav;
     }
     @GetMapping("/article/{id}")
