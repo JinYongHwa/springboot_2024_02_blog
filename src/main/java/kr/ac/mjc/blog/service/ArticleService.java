@@ -1,5 +1,6 @@
 package kr.ac.mjc.blog.service;
 
+import jakarta.transaction.Transactional;
 import kr.ac.mjc.blog.domain.Article;
 import kr.ac.mjc.blog.dto.ArticleRequest;
 import kr.ac.mjc.blog.dto.ArticleResponse;
@@ -67,5 +68,29 @@ public class ArticleService {
         return response;
 
     }
+
+    //글수정
+    @Transactional
+    public ArticleResponse modifyArticle(long id,ArticleRequest articleRequest){
+        //글이 있는지 확인
+        Optional<Article> optArticle=articleRepository.findById(id);
+        ArticleResponse response=new ArticleResponse();
+        if(optArticle.isEmpty()){  //글이 없을경우
+            response.setSuccess(false);
+            response.setMessage("존재하지 않는 글입니다");
+        }
+        else{   //글이 있을경우
+            Article article=optArticle.get();
+            article.setTitle(articleRequest.getTitle());
+            article.setContent(articleRequest.getContent());
+            articleRepository.save(article);
+            response.setSuccess(true);
+            response.setArticle(article);
+        }
+        return response;
+        
+        
+    }
+
 
 }

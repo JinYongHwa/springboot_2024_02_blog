@@ -25,5 +25,11 @@ public class BlogApiController {
         ArticleResponse response=articleService.deleteArticle(id);
         return ResponseEntity.ok(response);
     }
+    @PutMapping("/api/article/{id}")
+    public ResponseEntity<ArticleResponse> modifyArticle(@PathVariable("id") long id,
+                                                         @RequestBody ArticleRequest articleRequest){
+        ArticleResponse response=articleService.modifyArticle(id,articleRequest);
+        return ResponseEntity.ok(response);
+    }
 
 }
