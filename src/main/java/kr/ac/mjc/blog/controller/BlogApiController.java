@@ -1,5 +1,6 @@
 package kr.ac.mjc.blog.controller;
 
+import jakarta.servlet.http.HttpSession;
 import kr.ac.mjc.blog.domain.Article;
 import kr.ac.mjc.blog.dto.ArticleRequest;
 import kr.ac.mjc.blog.dto.ArticleResponse;
@@ -15,10 +16,19 @@ public class BlogApiController {
     ArticleService articleService;
 
     @PostMapping("/api/article")
-    public ResponseEntity<ArticleResponse> writeArticle(@RequestBody ArticleRequest articleRequest){
-        ArticleResponse response=articleService.writeArticle(articleRequest);
+    public ResponseEntity<ArticleResponse> writeArticle(@RequestBody ArticleRequest articleRequest, HttpSession session){
+        String loginUserId=(String)session.getAttribute("loginUserId");
+        if(loginUserId==null){  //로그인 된 사용자가 없을때 -> 글작성불가
+            ArticleResponse response=new ArticleResponse();
+            response.setSuccess(false);
+            response.setMessage("로그인 후 이용가능합니다");
+            return ResponseEntity.ok(response);
+        }
+        else{   //로그인이 되있을때 -> 글작성가능
+            ArticleResponse response=articleService.writeArticle(articleRequest,loginUserId);
+            return ResponseEntity.ok(response);
+        }
 
-        return ResponseEntity.ok(response);
     }
     @DeleteMapping("/api/article/{id}")
     public ResponseEntity<ArticleResponse> deleteArticle(@PathVariable("id") long id){

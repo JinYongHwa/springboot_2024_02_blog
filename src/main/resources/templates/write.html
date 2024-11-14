@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>글쓰기</title>
@@ -7,6 +7,13 @@
 </head>
 <body>
   <div class="container">
+      <div th:each="category : *{categoryList}">
+          <div class="form-check">
+              <input class="form-check-input category" type="checkbox" th:value="${category.id}" id="flexCheckDefault">
+              <label class="form-check-label" for="flexCheckDefault" th:text="${category.name}">
+              </label>
+          </div>
+      </div>
 
       <input id="title" type="text" class="form-control" name="title" placeholder="글제목">
       <textarea id="content" class="form-control" name="content" placeholder="글내용"></textarea>
@@ -21,7 +28,17 @@
           submitBtn.addEventListener("click",event=>{
                var title=titleElement.value
                var content=contentElement.value
-               console.log(title,content)
+
+               var checkedElements=document.querySelectorAll(".category:checked")
+               var categoryIds=[]
+               for(var i=0;i<checkedElements.length;i++){
+                var value=checkedElements[i].value
+                console.log(value)
+                categoryIds.push(Number(value))
+               }
+               console.log(categoryIds)
+
+
                fetch("/api/article",{
                     method:"POST",
                     headers:{
@@ -29,7 +46,8 @@
                     },
                     body:JSON.stringify({
                         title:title,
-                        content:content
+                        content:content,
+                        categoryIds:categoryIds
                     })
                })
                .then(response=>{

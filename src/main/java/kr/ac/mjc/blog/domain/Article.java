@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -22,6 +23,13 @@ public class Article {
 
     @Column(name="content",nullable = false)
     private String content;
+
+    @ManyToOne
+    private User writeUser;
+
+    @ManyToMany
+    private List<Category> categoryList;
+
 
     @CreatedDate
     @Column(name="created_at")
@@ -69,5 +77,21 @@ public class Article {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public User getWriteUser() {
+        return writeUser;
+    }
+
+    public void setWriteUser(User writeUser) {
+        this.writeUser = writeUser;
+    }
+
+    public List<Category> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<Category> categoryList) {
+        this.categoryList = categoryList;
     }
 }

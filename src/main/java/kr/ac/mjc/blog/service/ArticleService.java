@@ -2,12 +2,17 @@ package kr.ac.mjc.blog.service;
 
 import jakarta.transaction.Transactional;
 import kr.ac.mjc.blog.domain.Article;
+import kr.ac.mjc.blog.domain.Category;
+import kr.ac.mjc.blog.domain.User;
 import kr.ac.mjc.blog.dto.ArticleRequest;
 import kr.ac.mjc.blog.dto.ArticleResponse;
 import kr.ac.mjc.blog.repository.ArticleRepository;
+import kr.ac.mjc.blog.repository.CategoryRepository;
+import kr.ac.mjc.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,19 +22,35 @@ public class ArticleService {
     @Autowired
     ArticleRepository articleRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
+
     public List<Article> getArticles(){
         return articleRepository.findAll();
     }
     
     //새로운 글 작성
-    public ArticleResponse writeArticle(ArticleRequest articleRequest){
+    public ArticleResponse writeArticle(ArticleRequest articleRequest,String writerId){
         System.out.println(articleRequest.getTitle());
         System.out.println(articleRequest.getContent());
+        User writerUser=userRepository.findById(writerId).get();
 
         ArticleResponse response=new ArticleResponse();
         Article article=new Article();
         article.setTitle(articleRequest.getTitle());
         article.setContent(articleRequest.getContent());
+        article.setWriteUser(writerUser);
+
+        List<Category> categoryList=new ArrayList<>();
+        for(long categoryId:articleRequest.getCategoryIds()){
+            Category category=categoryRepository.findById(categoryId).get();
+            categoryList.add(category);
+        }
+        article.setCategoryList(categoryList);
+
         if(article.getTitle().indexOf("욕설")>-1){
             response.setSuccess(false);
             response.setMessage("제목에 욕설이 들어가면 안됩니다");
