@@ -2,6 +2,8 @@ package kr.ac.mjc.blog.domain;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Category {
 
@@ -12,6 +14,14 @@ public class Category {
 
     @Column(name="name",nullable = false)
     private String name;
+
+    @ManyToMany
+    @JoinTable(
+            name = "article_category",  // 중간 테이블 이름
+            joinColumns = @JoinColumn(name = "category_id"),  // Student 엔티티의 컬럼
+            inverseJoinColumns = @JoinColumn(name = "article_id")  // Course 엔티티의 컬럼
+    )
+    List<Article> articleList;
 
     public long getId() {
         return id;

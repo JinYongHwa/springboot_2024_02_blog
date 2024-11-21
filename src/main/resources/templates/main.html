@@ -35,6 +35,8 @@
         <a th:href="@{/article/{id}(id=${article.id}) }">
             <div class="card-header" th:text="${article.title}"></div>
         </a>
+        <div th:text="${article.formattedWriteDate}"></div>
+
 
       <div class="card-body">
         <div class="card-text" th:text="${article.content}"></div>

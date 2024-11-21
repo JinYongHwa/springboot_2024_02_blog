@@ -5,8 +5,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
@@ -28,6 +30,11 @@ public class Article {
     private User writeUser;
 
     @ManyToMany
+    @JoinTable(
+            name = "article_category",  // 중간 테이블 이름
+            joinColumns = @JoinColumn(name = "article_id"),  // Student 엔티티의 컬럼
+            inverseJoinColumns = @JoinColumn(name = "category_id")  // Course 엔티티의 컬럼
+    )
     private List<Category> categoryList;
 
 
@@ -93,5 +100,15 @@ public class Article {
 
     public void setCategoryList(List<Category> categoryList) {
         this.categoryList = categoryList;
+    }
+
+    public String getFormattedWriteDate(){
+        if(this.createdAt!=null){
+            return this.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        }
+        else{
+            return "";
+        }
+
     }
 }

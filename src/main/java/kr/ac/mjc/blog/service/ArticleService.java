@@ -10,6 +10,7 @@ import kr.ac.mjc.blog.repository.ArticleRepository;
 import kr.ac.mjc.blog.repository.CategoryRepository;
 import kr.ac.mjc.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,7 +30,9 @@ public class ArticleService {
     CategoryRepository categoryRepository;
 
     public List<Article> getArticles(){
-        return articleRepository.findAll();
+        return articleRepository.findAll(
+                Sort.by(Sort.Order.desc("createdAt"))
+        );
     }
     
     //새로운 글 작성
